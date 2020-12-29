@@ -1,22 +1,34 @@
-variable "ingressrules" {
-  type    = list(number)
-  default = [80, 443, 22,]
-}
-
 resource "aws_security_group" "web_traffic" {
   name        = "Allow web traffic"
   description = "Allow ssh and standard http/https ports inbound and everything outbound"
 
-  dynamic "ingress" {
-    iterator = port
-    for_each = var.ingressrules
-    content {
-      from_port   = port.value
-      to_port     = port.value
+  ingress {
+      from_port   = 80
+      to_port     = 80
       protocol    = "TCP"
       cidr_blocks = ["0.0.0.0/0"]
     }
-  }
+
+  ingress {
+      from_port   = 8080
+      to_port     = 8080
+      protocol    = "TCP"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+
+  ingress {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "TCP"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+
+  ingress {
+      from_port   = 443
+      to_port     = 443
+      protocol    = "TCP"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
 
   egress {
     from_port   = 0

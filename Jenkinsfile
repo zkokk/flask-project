@@ -20,7 +20,7 @@ pipeline
 
         PROJECT = 'final_project2'
 
-        IMAGE = 'final_project2:latest'
+        IMAGE = 'final_project2:$GIT_COMMIT'
 
         ECRURL = 'http://637927395305.dkr.ecr.us-east-1.amazonaws.com'
 
@@ -79,7 +79,7 @@ pipeline
 
                     // Build the docker image using a Dockerfile
 
-                    docker.build("$IMAGE")
+                    docker.build("$GIT_COMMIT")
 
                 }
             }
@@ -112,10 +112,6 @@ pipeline
 
                     }
                     sh "sudo docker rmi $IMAGE | true"
-                    sh "which helm"
-                    sh "helm version"
-                    sh "helm repo add soluto https://charts.soluto.io"
-                    sh "helm repo update"
                 }
             }
         }
@@ -128,7 +124,8 @@ pipeline
           { 
               script
               {
-             
+           sh "helm repo add soluto https://charts.soluto.io"
+           sh "helm repo update"
            sh "helm upgrade flaskapp helm/ --install --atomic --wait --set deployment.tag=$GIT_COMMIT"
          }
        }
