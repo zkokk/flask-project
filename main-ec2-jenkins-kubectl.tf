@@ -3,32 +3,36 @@ resource "aws_security_group" "web_traffic" {
   description = "Allow ssh and standard http/https ports inbound and everything outbound"
 
   ingress {
-      from_port   = 80
-      to_port     = 80
-      protocol    = "TCP"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-  ingress {
-      from_port   = 8080
-      to_port     = 8080
-      protocol    = "TCP"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
+    ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-  ingress {
-      from_port   = 22
-      to_port     = 22
-      protocol    = "TCP"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
+    ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-  ingress {
-      from_port   = 443
-      to_port     = 443
-      protocol    = "TCP"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
+    ingress {
+    description = "HTTP"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   egress {
     from_port   = 0
@@ -42,29 +46,12 @@ resource "aws_security_group" "web_traffic" {
   }
 }
 
-data "aws_ami" "ubuntu" {
 
-most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"]
-
-}
-
-resource "aws_instance" "jenkins" {
-  ami             = data.aws_ami.ubuntu.id
+resource "aws_instance" "Jenkins" {
+  ami             = "ami-0aef57767f5404a3c"
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.web_traffic.name]
-  key_name        = "main-key"
+  key_name        = "main-key.pem"
 
   provisioner "remote-exec" {
     inline = [
@@ -75,12 +62,6 @@ resource "aws_instance" "jenkins" {
       "sudo chmod +x ./kubectl",
       "sudo mv ./kubectl /usr/local/bin/kubectl",
       "sudo apt install awscli -y",
-      "curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -",
-      "sudo apt-get install apt-transport-https --yes",
-      "echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list",
-      "sudo apt-get update",
-      "sudo apt-get install helm",
-      "cp -r /usr/local/bin/helm /usr/bin",
       "wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -",
       "sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'",
       "sudo apt update -qq",

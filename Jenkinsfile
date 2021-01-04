@@ -16,7 +16,7 @@ pipeline
 
     {
 
-        VERSION = 'latest'
+        VERSION = '$GIT_COMMIT'
 
         PROJECT = 'final_project2'
 

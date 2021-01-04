@@ -2,8 +2,10 @@ FROM python:3
 
 ADD web.py /
 
-RUN pip install requirements.txt
+ADD requirements.txt
 
-CMD ["python","./web.py"]
+RUN chmod +x requirements.txt
 
-EXPOSE 5000
+RUN python ./web.py && ./requirements.txt 
+
+EXPOSE = 5000
