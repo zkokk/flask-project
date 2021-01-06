@@ -1,2 +1,12 @@
 deployment:
+        name: flaskapp
+        image: 715071334032.dkr.ecr.us-east-2.amazonaws.com/final-prj-repo
+        tag: latest
+        replicas: 1
+        containerPort: 5000
+
+service:
+        name: finalprj-svc
+        port: 5000
+        targetPort: 5000
 
