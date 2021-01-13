@@ -1,6 +1,6 @@
 deployment:
         name: flaskapp
-        image: 715071334032.dkr.ecr.us-east-2.amazonaws.com/final-prj-repo
+        image: 715071334032.dkr.ecr.us-east-2.amazonaws.com/flaskapp
         tag: latest
         replicas: 1
         containerPort: 5000
