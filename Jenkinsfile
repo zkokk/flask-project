@@ -29,7 +29,7 @@ pipeline {
     }
     post {
       success {
-        slackSend (color: 'good', message: "Build SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"))
+        slackSend (color: 'good', message: "Build SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
       }
 
       failure {
