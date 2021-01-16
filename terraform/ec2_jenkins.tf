@@ -14,7 +14,6 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-variable "key_name" {default="my-key"}
 resource "tls_private_key" "example" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -40,7 +39,6 @@ resource "aws_instance" "jenkins" {
     "Terraform" = "true"
   }
 }
-
 
 resource "aws_security_group" "ubuntu" {
   name        = "ubuntu-security-group"
