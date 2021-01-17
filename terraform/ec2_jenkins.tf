@@ -14,23 +14,18 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-resource "tls_private_key" "example" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "generated_key" {
-  key_name   = "${var.key_name}"
-  public_key = "${tls_private_key.example.public_key_openssh}"
+resource "aws_key_pair" "ssh_key" {
+  key_name   = var.key_name
+  public_key = file("~/.ssh/authorized_keys")
 }
 
 resource "aws_instance" "jenkins" {
-  ami           = data.aws_ami.ubuntu.id
+  ami             = data.aws_ami.ubuntu.id
   instance_type   = "t2.micro"
-  key_name        = aws_key_pair.generated_key.key_name
-  subnet_id     = "subnet-02ec9ea98af2ecbbd"
+  key_name        = aws_key_pair.ssh_key.key_name
+  subnet_id       = var.subnet
   security_groups = [aws_security_group.ubuntu.id]
-  user_data = file("install_jenkins.sh")
+  user_data       = file("install_jenkins.sh")
   
   associate_public_ip_address = true
   
@@ -72,8 +67,4 @@ resource "aws_security_group" "ubuntu" {
     protocol        = "-1"
     cidr_blocks     = ["0.0.0.0/0"]
   }
-}
-
-output "jenkins_ip_address" {
-  value = aws_instance.jenkins.public_dns
 }

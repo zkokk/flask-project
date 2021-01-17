@@ -3,5 +3,10 @@ variable "region" {
 }
 
 variable "key_name" {
-  default="my-key"
+  default = "my-key"
 }
+
+variable "subnet"{
+  default = "subnet-02ec9ea98af2ecbbd"
+}
+
