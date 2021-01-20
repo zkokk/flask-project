@@ -25,7 +25,7 @@ resource "aws_instance" "jenkins" {
   key_name        = aws_key_pair.ssh_key.key_name
   subnet_id       = var.subnet
   security_groups = [aws_security_group.ubuntu.id]
-  user_data       = file("install_jenkins.sh")
+  user_data       = file("installation_file.sh")
   
   associate_public_ip_address = true
   
