@@ -17,19 +17,15 @@ data "aws_ami" "ubuntu" {
 resource "aws_instance" "flaskapp-host" {
   ami             = data.aws_ami.ubuntu.id
   instance_type   = "t2.micro"
+  #key_name        = "quickstart.pem"
   key_name 	  = aws_key_pair.deployer-with-ssh.key_name
   security_groups = [aws_security_group.ubuntu.name]
   associate_public_ip_address = true
 
   provisioner "remote-exec" {
     inline = [  
-      #"echo Inastalling jeknins",
-      #"wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -",
-      #"sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ >/etc/apt/sources.list.d/jenkins.list'",
-      #"sudo apt-get update",
-      #"sudo apt-get install jenkins",
-      #"touch file"
-	"sudo add-apt-repository universe",
+      "echo Inastalling jeknins",
+      "sudo add-apt-repository universe",
       "sudo apt-get -f install",
       "sudo apt install net-tools",
       "curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl",
@@ -56,6 +52,8 @@ resource "aws_instance" "flaskapp-host" {
     host        = self.public_ip
     user        = "ubuntu"
     private_key = file("~/quickstart.pem")
+    agent       = false
+    timeout     = "1m"
   }
   tags = {
      Name = "ec-2-Jenkins"
@@ -71,7 +69,16 @@ resource "aws_key_pair" "deployer-with-ssh" {
 resource "aws_security_group" "ubuntu" {
   name        = "ubuntu-security-group"
   description = "Allow HTTP, HTTPS and SSH traffic"
+  
 
+  ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
   ingress {
     from_port   = 22
     to_port     = 22
@@ -79,7 +86,7 @@ resource "aws_security_group" "ubuntu" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-    ingress {
+  ingress {
     description = "HTTP"
     from_port   = 80
     to_port     = 80
@@ -102,6 +109,3 @@ resource "aws_security_group" "ubuntu" {
   }
 }
 
-#output "public_ip" {
-# value = aws_instance.public_ip
-#}
