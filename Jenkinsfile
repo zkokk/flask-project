@@ -8,10 +8,9 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-		 gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-		 shortCommitHash = gitCommitHash.take(7)
-  		 docker.build("$GIT_COMMIT")
-            }
+		sh 'docker build -t "my_ecr:$GIT_COMMIT" .'					
+		echo "BUILD WAS SUCCESSFUL"
+		}
         }
         stage('Push') {
             steps {
