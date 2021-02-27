@@ -15,7 +15,9 @@ pipeline {
         stage('Push') {
             steps {
                 echo 'Pushing to ECR..'
-		
+		sh 'aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 855051130134.dkr.ecr.eu-central-1.amazonaws.com'
+		sh 'docker tag my_ecr:$GIT_COMMIT 855051130134.dkr.ecr.eu-central-1.amazonaws.com/my_ecr:$GIT_COMMIT'
+		sh 'docker push 855051130134.dkr.ecr.eu-central-1.amazonaws.com/my_ecr:$GIT_COMMIT'
             }
         }
         stage('Deploy') {
