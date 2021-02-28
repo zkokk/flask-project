@@ -23,7 +23,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
-		sh 'helm upgrade flaskapp helm/ --install --atomic --wait --set deployment.tag=$GIT_COMMIT'
+		sh 'helm upgrade my_ecr helm/ --install --atomic --wait --set deployment.tag=$GIT_COMMIT'
             }
         }
     }
