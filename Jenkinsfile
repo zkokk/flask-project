@@ -8,7 +8,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-		sh 'docker build -t "my_ecr:$GIT_COMMIT" .'					
+		sh 'docker build -t "myecr:$GIT_COMMIT" .'					
 		echo "BUILD WAS SUCCESSFUL"
 		}
         }
