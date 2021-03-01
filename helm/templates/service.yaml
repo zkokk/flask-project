@@ -7,7 +7,7 @@ spec:
     app: {{ .Values.deployment.name }}
   ports:
     - protocol: {{ .Values.service.protocol }}
-      port: {{ .Values.service.port }}
+      port: {{ .Values.deplpoyment.port }}
       name: flaskport
       targetPort: {{ .Values.deployment.port }}
-  type: LoadBalancer
+  type: {{ .Values.service.type }} 

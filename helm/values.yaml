@@ -4,7 +4,9 @@ deployment:
         tag: latest
         replicas: 1
         port: 5000
+        containerPort: 80
 service:
         name: flaskapp-lb-svc
-        port: 80
-        protocol: TCP
+        #  port: 80
+        #  protocol: TCP
+        type: LoadBalancer

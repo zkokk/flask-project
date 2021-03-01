@@ -1,4 +1,4 @@
-apiVersion: v2
+apiVersion: v1
 name: helm
 description: flask app helm chart
 type: application
