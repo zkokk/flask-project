@@ -1,5 +1,5 @@
-resource "aws_ecr_repository" "my_ecr" {
-  name                 = "my_ecr"
+resource "aws_ecr_repository" "myecr" {
+  name                 = "myecr"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
