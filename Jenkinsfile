@@ -10,6 +10,8 @@ pipeline {
                 echo 'Building..'
 		sh 'docker build -t "myecr:$GIT_COMMIT" .'					
 		echo "BUILD WAS SUCCESSFUL"
+		slackSend (color: '#FFFF00', message: "Build step STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+		
 		}
         }
         stage('Push') {
@@ -24,7 +26,16 @@ pipeline {
             steps {
                 echo 'Deploying....'
 		sh 'helm upgrade flaskapp helm/ --install --atomic --wait --set deployment.tag=$GIT_COMMIT'
+		slackSend (color: '#FFFF00', message: "Deploy step STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
             }
         }
     }
-}
+post {
+      success {
+        slackSend (color: 'good', message: "Build SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+      }
+
+      failure {
+        slackSend (color: 'danger', message: "Build FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")   
+      }
+    }
