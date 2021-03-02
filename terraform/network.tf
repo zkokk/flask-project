@@ -20,11 +20,13 @@ module "vpc" {
     Environment = "dev"
   }
   public_subnet_tags = {
-    public_subnet = "shared"
+   # public_subnet = "shared"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/role/elb"  = "1"
   }
   private_subnet_tags = {
-    "kubernetes.io/cluster/my_cluster" = "shared"
-    "kubernetes.io/role/internal-elb"           = "1"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/role/internal-elb"  = "1"
   }
 }
 
@@ -32,6 +34,6 @@ resource "aws_eip" "nat_gw_elastic_ip" {
   vpc = true
 
   tags = {
-    Name            = "my_cluster-eip"
+    Name            = "my-cluster-eip"
   }
 }
