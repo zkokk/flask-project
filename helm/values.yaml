@@ -1,0 +1,11 @@
+deployment:
+        name: myecr
+        image: 855051130134.dkr.ecr.eu-central-1.amazonaws.com/myecr
+        tag: latest
+        replicas: 1
+        containerPort: 5000
+service:
+        name: flaskapp-lb-svc
+        port: 5000
+        targetPort: 5000
+        type: LoadBalancer
