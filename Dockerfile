@@ -3,6 +3,6 @@ COPY . /app
 WORKDIR /app
 RUN pip freeze > requirements.txt
 RUN pip install -r requirements.txt
-EXPOSE 5001
+EXPOSE 5000
 ENTRYPOINT [ "python" ]
-CMD [ "web.py" ]
+CMD [ "app:app" ]
